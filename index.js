@@ -54,7 +54,10 @@ app.post('/receipts/process/', (req, res) => {
     // while we find the id in the receipts object, generate a new uuid and try again in case of collision
     while (receipts.hasOwnProperty(id)) id = uuidv4();
     receipts[id] = req.body;
-    return res.json({ id });
+    return res.json({
+        description: "Returns the ID assigned to the receipt",
+        id
+    });
 });
 
 app.get("/receipts/:id/points/", (req, res) => {
@@ -101,6 +104,8 @@ app.get("/receipts/:id/points/", (req, res) => {
     // 10 points if the time of purchase is after 2:00 PM and before 4:00 PM
     const purchaseHour = parseInt(receipt.purchaseTime.slice(0, 2));
     if (purchaseHour >= 14 && purchaseHour < 16) points += 10
-
-    return res.json(points);
+    return res.json({
+        description: "The number of points awarded",
+        points
+    });
 });

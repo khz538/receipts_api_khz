@@ -12,13 +12,14 @@ const isValidReceipt = receipt => {
         !receipt.hasOwnProperty('total')
         ) return false;
 
-    // for each of the required properties, check they meet their own requirements
+    // for each of the required properties, check they meet their own formatting requirements
     if (/[\w\s-]+$/.test(receipt.retailer) === false) {
         return false
     };
     if (/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(receipt.purchaseDate) === false) {
         return false;
     }
+    if (!isValidDate(receipt.purchaseDate)) return false;
     if (/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(receipt.purchaseTime) === false) {
         return false;
     }
@@ -41,7 +42,7 @@ const isValidReceipt = receipt => {
     return true;
 }
 
-const isValidDate = dateString => {
+function isValidDate(dateString) {
     // dateString comes in format YYYY-MM-DD
     // parse the string into year, month, day
     const [month, day, year] = [parseInt(dateString.slice(5, 7)), parseInt(dateString.slice(8)), parseInt(dateString.slice(0, 4))];
@@ -91,5 +92,4 @@ const isValidDate = dateString => {
 module.exports = {
     isAlphanumeric,
     isValidReceipt,
-    isValidDate,
 }
