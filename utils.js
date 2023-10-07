@@ -41,7 +41,55 @@ const isValidReceipt = receipt => {
     return true;
 }
 
+const isValidDate = dateString => {
+    // dateString comes in format YYYY-MM-DD
+    // parse the string into year, month, day
+    const [month, day, year] = [parseInt(dateString.slice(5, 7)), parseInt(dateString.slice(8)), parseInt(dateString.slice(0, 4))];
+    const isLeapYear = yearString => {
+        const year = parseInt(yearString);
+        // leap years are divisible by 4, but not by 100 unless also by 400
+        if (year % 4 === 0) {
+            if (year % 100 === 0) {
+                if (year % 400 === 0) return true;
+                else return false;
+            } else return true;
+        } else return false;
+    }
+
+    // the date cannot be in the future
+    const isInFuture = (year, month, day) => {
+        // ensure the date on the receipt is not in the future
+        const now = new Date();
+        if (year > now.getFullYear()) return true;
+        else if (year < now.getFullYear()) return false;
+        // check the month is not in the future
+        if (month > now.getMonth() + 1) return true;
+        else if (month < now.getMonth() + 1) return false;
+        // check the day is not in the future
+        if (day > now.getDate()) return true;
+        else return false;
+    }
+
+    if (month < 1 || month > 12) return false;
+    if (day < 1 || day > 31) return false;
+    if (month === 2) {
+        if (isLeapYear(year)) {
+            if (day > 29) return false;
+        } else {
+            if (day > 28) return false;
+        }
+    }
+    if ([4, 6, 9, 11].includes(month)) {
+        if (day > 30) return false;
+    }
+
+    return isInFuture(year, month, day) === false
+}
+
+
+
 module.exports = {
     isAlphanumeric,
-    isValidReceipt
+    isValidReceipt,
+    isValidDate,
 }
